@@ -41,7 +41,7 @@ delete "/:name" do
 end
 
 class Drawing
-  DRAWING_DIR = "/Users/enebo/work/minecraft/plugins/Purogo"
+  DRAWING_DIR = File.join(File.dirname(__FILE__), '../plugins/purogo')
   attr_accessor :name, :program
 
   def initialize(host, name, program)
