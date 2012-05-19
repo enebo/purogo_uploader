@@ -1,0 +1,41 @@
+<html>
+<body>
+<% if @message %>
+<b><%= @message %><b><br />
+<% end %>
+<p/>
+<table>
+<tr>
+<td>
+<form action="/<%= @drawing.name %>" method="post">
+  <div class="field">
+    <label for="drawing_name">Name</label>
+    <input id="drawing_id" name="drawing[name]" size="30" type="text" value="<%=@drawing.name%>"/>
+  </div>
+  <div class="field">
+    <label for="drawing_program">Program</label><br />
+    <textarea name="drawing[program]" rows="30" cols="80" type="textarea"><%= @drawing.program %></textarea>
+  </div>
+  <div class="actions">
+    <input name="commit" type="submit" value="Update Drawing" />
+  </div>
+</form>
+<form action="/<%= @drawing.name %>" method="post">
+  <input name ="_method" type="hidden" value="delete"/>
+  <input name="commit" type="submit" value="Remove Drawing" />
+</form>
+<td>
+<% if @drawings.empty? %>
+No Drawings Saved yet.</br/>
+<% else %>
+<table border="1">
+<th>My Drawings</th>
+<% @drawings.each do |drawing| %>
+<tr><td><a href="/<%= drawing %>"><%= drawing %></a></td></tr>
+<% end %>
+</table>
+<% end %>
+</td>
+</tr>
+</body>
+</html>
