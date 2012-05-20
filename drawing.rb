@@ -19,9 +19,10 @@ get "/images/:name" do
 end
 
 get "/:page" do
-  puts "P: #{params['page']}"
+  puts "P2: #{params['page']}"
   page = WIKI.page(params['page'])
-  @data = page.formatted_data
+  @data = page.formatted_data 
+  @data = page.raw_data if !@data || @data == ""
   erb :docs
 end
 
@@ -67,19 +68,6 @@ end
 get "/images/:name" do
   send_file "#{WIKI_LOCATION}/images/#{params['name']}", :type => :png
 end
-
-get "/:page" do
-  
-  puts "P: #{params['page']}"
-  page = WIKI.page(params['page'])
-  @data = page.formatted_data
-  erb :docs
-end
-
-get "/edit/" do
-  redirect "/edit/drawing"
-end
-
 
 class Drawing
   DRAWING_DIR = ENV['PUROGO_DRAWING_DIR'] || "../minecraft/plugins/purogo"
