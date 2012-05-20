@@ -2,6 +2,8 @@ require 'sinatra'
 require 'gollum'
 require 'fileutils'
 
+set :port, 3000
+
 # Check out Purugin.wiki.git and place as sibling
 WIKI_LOCATION = ENV['PURUGIN_WIKI_DIR'] || "../Purugin.wiki"
 WIKI = Gollum::Wiki.new(WIKI_LOCATION)
