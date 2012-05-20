@@ -1,5 +1,7 @@
 <html>
 <body>
+<b>Tutorial Start:<a href="/Purogo-Introduction">Purogo-Introduction</a></b>
+<hr/>
 <% if @message %>
 <b><%= @message %><b><br />
 <% end %>
@@ -7,7 +9,7 @@
 <table>
 <tr>
 <td>
-<form action="/<%= @drawing.name %>" method="post">
+<form action="/edit/<%= @drawing.name %>" method="post">
   <div class="field">
     <label for="drawing_name">Name</label>
     <input id="drawing_id" name="drawing[name]" size="30" type="text" value="<%=@drawing.name%>"/>
@@ -20,7 +22,7 @@
     <input name="commit" type="submit" value="Update Drawing" />
   </div>
 </form>
-<form action="/<%= @drawing.name %>" method="post">
+<form action="/edit/<%= @drawing.name %>" method="post">
   <input name ="_method" type="hidden" value="delete"/>
   <input name="commit" type="submit" value="Remove Drawing" />
 </form>
@@ -31,7 +33,7 @@ No Drawings Saved yet.</br/>
 <table border="1">
 <th>My Drawings</th>
 <% @drawings.each do |drawing| %>
-<tr><td><a href="/<%= drawing %>"><%= drawing %></a></td></tr>
+<tr><td><a href="/edit/<%= drawing %>"><%= drawing %></a></td></tr>
 <% end %>
 </table>
 <% end %>

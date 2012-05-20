@@ -1,22 +1,43 @@
 require 'rubygems'
 require 'sinatra'
+require 'gollum'
+
+# Check out Purugin.wiki.git and place as sibling
+WIKI_LOCATION = ENV['PURUGIN_WIKI_DIR'] || "../Purugin.wiki"
+WIKI = Gollum::Wiki.new(WIKI_LOCATION)
 
 def default_drawing
   Drawing.new(request.ip, params['name'], %Q{turtle("my drawing") do\nend\n})
 end
 
 get "/" do
-  redirect "/drawing"
+  redirect "/edit/drawing"
 end
 
-get "/:name" do
+get "/images/:name" do
+  send_file "#{WIKI_LOCATION}/images/#{params['name']}", :type => :png
+end
+
+get "/:page" do
+  
+  puts "P: #{params['page']}"
+  page = WIKI.page(params['page'])
+  @data = page.formatted_data
+  erb :docs
+end
+
+get "/edit/" do
+  redirect "/edit/drawing"
+end
+
+get "/edit/:name" do
   @drawings = Drawing.all(request.ip)
   @drawing = Drawing.find(request.ip, params['name'])
   @drawing = default_drawing unless @drawing
   erb :edit
 end
 
-post "/:name" do
+post "/edit/:name" do
   @drawing = Drawing.new(request.ip, params['drawing']['name'], params['drawing']['program'])
   @drawing.save
   @drawings = Drawing.all(request.ip)
@@ -28,7 +49,7 @@ post "/:name" do
   end
 end
 
-delete "/:name" do
+delete "/edit/:name" do
   @drawing = Drawing.find(request.ip, params['name'])
   if @drawing
     @message = "#{params['name']} removed."
@@ -41,7 +62,7 @@ delete "/:name" do
 end
 
 class Drawing
-  DRAWING_DIR = File.join(File.dirname(__FILE__), '../plugins/purogo')
+  DRAWING_DIR = ENV['PUROGO_DRAWING_DIR'] || "../minecraft/plugins/purogo"
   attr_accessor :name, :program
 
   def initialize(host, name, program)
