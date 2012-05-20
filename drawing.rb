@@ -1,6 +1,6 @@
-require 'rubygems'
 require 'sinatra'
 require 'gollum'
+require 'fileutils'
 
 # Check out Purugin.wiki.git and place as sibling
 WIKI_LOCATION = ENV['PURUGIN_WIKI_DIR'] || "../Purugin.wiki"
@@ -19,7 +19,6 @@ get "/images/:name" do
 end
 
 get "/:page" do
-  
   puts "P: #{params['page']}"
   page = WIKI.page(params['page'])
   @data = page.formatted_data
@@ -102,6 +101,6 @@ class Drawing
   def self.make_user_dir(host)
     dir = File.join(DRAWING_DIR, host)
 
-    Dir.mkdir dir unless File.exist? dir
+    FileUtils.mkdir_p dir unless File.directory? dir
   end
 end
