@@ -42,7 +42,7 @@ post "/edit/:name" do
   @drawings = Drawing.all(request.ip)
   @message = "#{params['drawing']['name']} saved."
   if params['name'] != params['drawing']['name']
-    redirect "/#{params['drawing']['name']}"
+    redirect "/edit/#{params['drawing']['name']}"
   else
     erb :edit
   end
@@ -59,6 +59,27 @@ delete "/edit/:name" do
   @drawings = Drawing.all(request.ip)
   erb :edit
 end
+
+get "/" do
+  redirect "/edit/drawing"
+end
+
+get "/images/:name" do
+  send_file "#{WIKI_LOCATION}/images/#{params['name']}", :type => :png
+end
+
+get "/:page" do
+  
+  puts "P: #{params['page']}"
+  page = WIKI.page(params['page'])
+  @data = page.formatted_data
+  erb :docs
+end
+
+get "/edit/" do
+  redirect "/edit/drawing"
+end
+
 
 class Drawing
   DRAWING_DIR = ENV['PUROGO_DRAWING_DIR'] || "../minecraft/plugins/purogo"
