@@ -6,12 +6,12 @@ require 'fileutils'
 WIKI_LOCATION = ENV['PURUGIN_WIKI_DIR'] || "../Purugin.wiki"
 WIKI = Gollum::Wiki.new(WIKI_LOCATION)
 
-def default_drawing
-  Drawing.new(request.ip, params['name'], %Q{turtle("my drawing") do\nend\n})
+def default_drawing(username)
+  Drawing.new(username, params['name'], %Q{turtle("my drawing") do\nend\n})
 end
 
 get "/" do
-  redirect "/edit/drawing"
+  erb :user
 end
 
 get "/images/:name" do
@@ -19,6 +19,7 @@ get "/images/:name" do
 end
 
 get "/:page" do
+  @username = params['username']
   puts "P2: #{params['page']}"
   page = WIKI.page(params['page'])
   @data = page.formatted_data 
@@ -31,33 +32,38 @@ get "/edit/" do
 end
 
 get "/edit/:name" do
-  @drawings = Drawing.all(request.ip)
-  @drawing = Drawing.find(request.ip, params['name'])
-  @drawing = default_drawing unless @drawing
+  puts "PARAM #{params['username']}"
+  @username = params['username']
+  @drawings = Drawing.all(@username)
+  @drawing = Drawing.find(@username, params['name'])
+  @drawing = default_drawing(@username) unless @drawing
   erb :edit
 end
 
 post "/edit/:name" do
-  @drawing = Drawing.new(request.ip, params['drawing']['name'], params['drawing']['program'])
+  puts "PARMS: #{params}"
+  @username = params['username']
+  @drawing = Drawing.new(@username, params['drawing']['name'], params['drawing']['program'])
   @drawing.save
-  @drawings = Drawing.all(request.ip)
+  @drawings = Drawing.all(@username)
   @message = "#{params['drawing']['name']} saved."
   if params['name'] != params['drawing']['name']
-    redirect "/edit/#{params['drawing']['name']}"
+    redirect "/edit/#{params['drawing']['name']}?username=#{@username}"
   else
     erb :edit
   end
 end
 
 delete "/edit/:name" do
-  @drawing = Drawing.find(request.ip, params['name'])
+  @username = params['username']
+  @drawing = Drawing.find(@username, params['name'])
   if @drawing
     @message = "#{params['name']} removed."
     @drawing.remove
   else
-    @drawing = default_drawing
+    @drawing = default_drawing(@username)
   end
-  @drawings = Drawing.all(request.ip)
+  @drawings = Drawing.all(@username)
   erb :edit
 end
 

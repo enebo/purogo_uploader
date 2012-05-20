@@ -10,6 +10,7 @@
 <tr>
 <td>
 <form action="/edit/<%= @drawing.name %>" method="post">
+  <input name="username" type="hidden" value="<%= @username %>"/>
   <div class="field">
     <label for="drawing_name">Name</label>
     <input id="drawing_id" name="drawing[name]" size="30" type="text" value="<%=@drawing.name%>"/>
@@ -24,6 +25,7 @@
 </form>
 <form action="/edit/<%= @drawing.name %>" method="post">
   <input name ="_method" type="hidden" value="delete"/>
+  <input name="username" type="hidden" value="<%= @username %>"/>
   <input name="commit" type="submit" value="Remove Drawing" />
 </form>
 <td>
@@ -33,7 +35,7 @@ No Drawings Saved yet.</br/>
 <table border="1">
 <th>My Drawings</th>
 <% @drawings.each do |drawing| %>
-<tr><td><a href="/edit/<%= drawing %>"><%= drawing %></a></td></tr>
+<tr><td><a href="/edit/<%= drawing %>?username=<%= @username %>"><%= drawing %></a></td></tr>
 <% end %>
 </table>
 <% end %>
